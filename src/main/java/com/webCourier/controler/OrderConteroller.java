@@ -30,7 +30,7 @@ public class OrderConteroller {
 	
 	
 	
-	@PostMapping("/order")
+	@PostMapping("order")
 	public Map saveOrder(@RequestBody OrderTableModel otm) {
 		
 		try {
@@ -82,8 +82,23 @@ public class OrderConteroller {
 		
 	}
 	
-	
-	@GetMapping("/order_update")
+		@GetMapping("search/{trackingNum}")
+	public ResponseEntity<Map> findByTrackingNum(@PathVariable(value = "trackingNum") String trackingNum){
+		Map<String, Object> map = new HashMap<>();
+		
+		try {
+			List<OrderTableModel> otms = orderRepository.findByTrackingNumber(trackingNum);
+ 			map.put("message", "Order get successfully");
+			map.put("data", otms.get(0));
+			return ResponseEntity.status(HttpStatus.OK).body(map);
+		} catch (Exception e) {
+			map.put("message", e.getLocalizedMessage());
+			map.put("data", null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+		}
+		
+	}
+	@GetMapping("order_update")
 	public ResponseEntity<Map> update(@RequestBody OrderTableModel entity) {
 		Map<String, Object> map = new HashMap<>();
 		try {
@@ -101,14 +116,14 @@ public class OrderConteroller {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
 		}
 	}
-	@GetMapping(value = "/order/delete/{id}")
+	@PostMapping(value = "order/delete/{id}")
 	public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
 		Map<String, Object> map = new HashMap<>();
-		OrderTableModel user = orderRepository.findById(id).get();
+		
 		try {
-			orderRepository.delete(user);
+		 orderRepository.deleteById(id);	
 			map.put("message", "Data deleted successfully");
-			map.put("Data", user);
+			map.put("Data", "deleted");
 			map.put("Status code", "success");
 			return ResponseEntity.ok(map);
 		} catch (Exception e) {

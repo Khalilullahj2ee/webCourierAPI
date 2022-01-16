@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,12 +23,7 @@ import com.webCourier.repository.UserService;
 public class WelcomeControler {
 	@Autowired
 	 private  UserService userService;
-	@GetMapping("/")
-	public String index() {
-		
-		return "hello";
-	}
-	
+
 	@GetMapping("/user_findAll")
 	public ResponseEntity<Map> findAll() {
 		
@@ -67,7 +63,7 @@ public class WelcomeControler {
 		}
 	}
 	
-	@GetMapping("/user_save")
+	@PostMapping("/user_save")
 	public ResponseEntity<Map> save(@RequestBody UserModel entity) {
 		Map<String, Object> map = new HashMap<>();
 		try {
